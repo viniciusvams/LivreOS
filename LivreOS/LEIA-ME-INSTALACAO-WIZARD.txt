@@ -1,0 +1,27 @@
+LIVREOS - PACOTE COM WIZARD DE INSTALACAO
+=========================================
+
+Estrutura:
+- sistema_erp  -> pasta privada com app, vendor, .env e banco
+- public_html  -> pasta publica (index.php, assets, install/)
+
+PASSOS RAPIDOS
+--------------
+1) Envie as duas pastas para o servidor:
+   - public_html no document root do site/subdominio
+   - sistema_erp fora da pasta publica
+
+2) Acesse:
+   https://seu-dominio/install/
+
+3) No wizard:
+   - escolha raiz/subpasta/subdominio
+   - confirme caminhos absolutos
+   - informe APP_NAME, APP_URL e tipo de banco (SQLite ou MySQL)
+   - execute migracoes e seed
+
+4) Login padrao:
+   admin@admin.com / password
+
+5) Seguranca:
+   apague a pasta install apos concluir.

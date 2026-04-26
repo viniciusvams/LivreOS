@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Proposta Comercial – ${empresa_nome}</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Calibri:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', 'Calibri', sans-serif;
+      background: #EAEFF5;
+      color: #1A1A2E;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* Dados do cliente: use class="${cliente_classe_tipo_body}" no body */
+    body:not(.tipo-cliente-F) .proposta-cliente-somente-f { display: none !important; }
+    body:not(.tipo-cliente-J) .proposta-cliente-somente-j { display: none !important; }
+    body:not(.tipo-cliente-E) .proposta-cliente-somente-e { display: none !important; }
+    body:not(.tipo-cliente-nenhum) .proposta-cliente-sem-cadastro { display: none !important; }
+
+    /* ── PÁGINA ── */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 24px auto;
+      background: #fff;
+      box-shadow: 0 4px 32px rgba(13,43,85,.18);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── CABEÇALHO ── */
+    .header {
+      background: linear-gradient(135deg, #0D2B55 0%, #0F3464 100%);
+      padding: 28px 32px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .header-left .icon { font-size: 22px; margin-right: 6px; display: none; }
+    .header-left .empresa-nome {
+      font-size: 20px; font-weight: 700; color: #fff;
+      letter-spacing: .4px; display: inline;
+    }
+    .header-left .empresa-cnpj {
+      margin-top: 6px; font-size: 11px;
+      color: #A8C8E8; letter-spacing: .3px;
+    }
+    .header-right { text-align: right; }
+    .header-right .prop-label {
+      font-size: 12px; font-weight: 700;
+      color: #fff; letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .header-right .prop-ref {
+      margin-top: 5px; font-size: 10px; color: #A8C8E8;
+    }
+    .header-right .prop-status {
+      margin-top: 4px; font-size: 10px;
+      color: #7EC8A0; font-weight: 500;
+    }
+	
+/* ── LOGO COM BOLA BRANCA ── */
+    .logo-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 16px;
+      flex-shrink: 0;
+    }
+    /* bola branca – maior que o logo */
+    .logo-wrapper::before {
+      content: '';
+      position: absolute;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.22);
+      z-index: 0;
+    }
+    /* logo fica em cima da bola */
+    .logo-wrapper img,
+    .logo-wrapper .icon-text {
+      position: relative;
+      z-index: 1;
+      max-width: 72px;
+      max-height: 72px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+    /* fallback quando o logo é texto/emoji */
+    .logo-wrapper .icon-text {
+      font-size: 36px;
+      line-height: 1;
+    }
+
+
+
+    /* ── FAIXA TÍTULO ── */
+    .title-bar {
+      background: #1A5F9E;
+      padding: 12px 32px;
+      text-align: center;
+    }
+    .title-bar h2 {
+      color: #fff; font-size: 15px;
+      font-weight: 600; letter-spacing: .5px;
+    }
+
+    /* ── CORPO ── */
+    .body { padding: 24px 32px; flex: 1; }
+
+    /* ── GRID INFO ── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid #E0E5ED;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+    .info-block {
+      padding: 16px 18px;
+    }
+    .info-block:first-child {
+      background: #F4F6F9;
+      border-right: 1px solid #E0E5ED;
+    }
+    .info-block:last-child { background: #fff; }
+    .info-block .block-label {
+      font-size: 9px; font-weight: 700;
+      color: #1A5F9E; letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #1A5F9E;
+      display: inline-block;
+    }
+    .info-row {
+      font-size: 11px; margin-bottom: 5px;
+      color: #1A1A2E; line-height: 1.5;
+    }
+    .info-row strong { font-weight: 600; color: #0D2B55; }
+
+    /* ── SEÇÃO LABEL ── */
+    .section-label {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 10px;
+    }
+    .section-label .bar {
+      width: 4px; height: 20px;
+      background: #1A5F9E; border-radius: 2px;
+    }
+    .section-label span {
+      font-size: 12px; font-weight: 700;
+      color: #1A5F9E; letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    /* ── TABELA ITENS ── */
+    .items-section { margin-bottom: 28px; }
+    .items-table {
+      width: 100%; border-collapse: collapse;
+      border-radius: 6px; overflow: hidden;
+      border: 1px solid #D0D5DD;
+      font-size: 11px;
+    }
+    .items-table thead tr {
+      background: linear-gradient(90deg, #0D2B55, #1A5F9E);
+    }
+    .items-table thead th {
+      padding: 11px 10px; color: #fff;
+      font-weight: 600; font-size: 10px;
+      letter-spacing: .5px; text-transform: uppercase;
+      border: none;
+    }
+    .items-table thead th:nth-child(1) { width: 5%;  text-align: center; }
+    .items-table thead th:nth-child(2) { width: 10%; text-align: left; }
+    .items-table thead th:nth-child(3) { width: 38%; text-align: left; }
+    .items-table thead th:nth-child(4) { width: 8%;  text-align: center; }
+    .items-table thead th:nth-child(5) { width: 13%; text-align: right; }
+    .items-table thead th:nth-child(6) { width: 11%; text-align: right; }
+    .items-table thead th:nth-child(7) { width: 15%; text-align: right; }
+
+    .items-table tbody tr {
+      border-bottom: 1px solid #E8ECF1;
+      transition: background .15s;
+    }
+    .items-table tbody tr:nth-child(even) { background: #F9FAFB; }
+    .items-table tbody tr:hover { background: #EEF4FB; }
+    .items-table tbody td {
+      padding: 10px 10px; color: #1A1A2E;
+      vertical-align: middle; border: none;
+    }
+    .items-table tbody td:nth-child(1) { text-align: center; color: #6B7280; font-weight: 500; }
+    .items-table tbody td:nth-child(4) { text-align: center; }
+    .items-table tbody td:nth-child(5),
+    .items-table tbody td:nth-child(6),
+    .items-table tbody td:nth-child(7) { text-align: right; font-variant-numeric: tabular-nums; }
+    .items-table tbody td:nth-child(7) { color: #0D2B55; font-weight: 600; }
+
+    /* ── TOTAIS ── */
+    .totals-section { margin-bottom: 28px; }
+    .totals-box {
+      margin-left: auto;
+      width: 320px;
+      border: 1px solid #E0E5ED;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .total-row {
+      display: flex; justify-content: space-between;
+      align-items: center; padding: 9px 16px;
+      font-size: 11px;
+    }
+    .total-row:nth-child(odd)  { background: #F4F6F9; }
+    .total-row:nth-child(even) { background: #fff; }
+    .total-row .t-label { color: #374151; font-weight: 500; }
+    .total-row .t-value { color: #1A5F9E; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .total-row.grand {
+      background: linear-gradient(90deg, #0D2B55, #1A5F9E) !important;
+      padding: 13px 16px;
+    }
+    .total-row.grand .t-label {
+      color: #fff; font-size: 13px; font-weight: 700;
+      letter-spacing: .4px;
+    }
+    .total-row.grand .t-value {
+      color: #fff; font-size: 14px; font-weight: 700;
+    }
+
+    /* ── OBSERVAÇÕES ── */
+    .obs-section { margin-bottom: 28px; }
+    .obs-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0; border: 1px solid #E0E5ED;
+      border-radius: 6px; overflow: hidden;
+    }
+    .obs-block { padding: 16px 18px; min-height: 80px; }
+    .obs-block:first-child {
+      background: #F4F6F9;
+      border-right: 1px solid #E0E5ED;
+    }
+    .obs-block:last-child { background: #fff; }
+    .obs-block .obs-label {
+      font-size: 9px; font-weight: 700;
+      color: #1A5F9E; letter-spacing: 1.2px;
+      text-transform: uppercase; margin-bottom: 8px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid #1A5F9E;
+      display: inline-block;
+    }
+    .obs-block .obs-text {
+      font-size: 11px; color: #374151; line-height: 1.6;
+    }
+
+    /* ── TEXTO RICO (tags *_html — só modelo HTML; não existem no .docx) ── */
+    .desc-section { margin-bottom: 28px; }
+    .rich-html-block {
+      padding: 16px 18px;
+      border: 1px solid #E0E5ED;
+      border-radius: 6px;
+      background: #fff;
+    }
+    .proposta-rich-html { font-size: 11px; color: #374151; line-height: 1.65; }
+    .proposta-rich-html p { margin: 0 0 0.55em 0; }
+    .proposta-rich-html p:last-child { margin-bottom: 0; }
+    .proposta-rich-html ul, .proposta-rich-html ol { margin: 0.4em 0 0.55em 1.25em; padding-left: 1em; }
+    .proposta-rich-html li { margin-bottom: 0.25em; }
+    .proposta-rich-html strong, .proposta-rich-html b { font-weight: 600; color: #0D2B55; }
+    .proposta-rich-html a { color: #1A5F9E; }
+    .proposta-rich-html h1, .proposta-rich-html h2, .proposta-rich-html h3 { font-size: 12px; margin: 0.6em 0 0.35em; color: #1A5F9E; }
+
+    /* ── ASSINATURAS ── */
+    .signatures {
+      display: flex; justify-content: space-between;
+      gap: 32px; margin-bottom: 28px;
+      padding: 0 16px;
+    }
+    .sig-box { flex: 1; text-align: center; }
+    .sig-line {
+      border-top: 1.5px solid #1A5F9E;
+      margin-bottom: 8px; padding-top: 8px;
+    }
+    .sig-label {
+      font-size: 10px; color: #374151;
+      font-weight: 600; letter-spacing: .3px;
+    }
+
+    /* ── RODAPÉ ── */
+    .footer {
+      background: linear-gradient(135deg, #0D2B55 0%, #0F3464 100%);
+      padding: 10px 32px;
+      text-align: center;
+    }
+    .footer p {
+      font-size: 9px; color: #A8C8E8;
+      letter-spacing: .4px;
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      body { background: #fff; }
+      .page { margin: 0; box-shadow: none; border-radius: 0; }
+    }
+  </style>
+</head>
+<body class="${cliente_classe_tipo_body}">
+  <div class="page">
+
+    <!-- CABEÇALHO -->
+    <div class="header">
+      <div class="header-left">
+        <div style="display:flex; align-items:center;">
+          <!-- bola branca atrás do logo -->
+          <div class="logo-wrapper">
+            ${empresa_logo}
+          </div>
+          <div>
+            <div class="empresa-nome">${empresa_nome}</div>
+            <div class="empresa-cnpj">CNPJ: ${empresa_cnpj}</div>
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="prop-label">Proposta Comercial</div>
+        <div class="prop-ref">Ref: ${proposta_referencia} &nbsp;·&nbsp; ID ${proposta_id} &nbsp;·&nbsp; v${proposta_versao}</div>
+        <div class="prop-status"></div>
+      </div>
+    </div>
+
+    <!-- FAIXA TÍTULO -->
+    <div class="title-bar">
+      <h2>${proposta_titulo}</h2>
+    </div>
+
+    <div class="body">
+
+      <!-- GRID: EMISSÃO + CLIENTE -->
+      <div class="info-grid">
+        <div class="info-block">
+          <div class="block-label">Informações da Proposta</div>
+          <div class="info-row"><strong>Emissão:</strong> ${data_emissao}</div>
+          <div class="info-row"><strong>Válido até:</strong> ${validade_em}</div>
+          <div class="info-row"><strong>Vendedor:</strong> ${vendedor_nome}</div>
+
+        </div>
+        <div class="info-block">
+          <div class="block-label">Dados do Cliente</div>
+          <div class="info-row"><strong>Tipo:</strong> ${cliente_tipo_pessoa_label}</div>
+          <div class="info-row proposta-cliente-sem-cadastro"><em>Nenhum cliente associado à proposta.</em></div>
+
+          <!-- Pessoa física -->
+          <div class="proposta-cliente-somente-f">
+            <div class="info-row"><strong>Nome completo:</strong> ${cliente_nome}</div>
+            <div class="info-row"><strong>CPF:</strong> ${cliente_cpf}</div>
+            <div class="info-row"><strong>RG:</strong> ${cliente_rg}</div>
+            <div class="info-row"><strong>Data de nascimento:</strong> ${cliente_data_nascimento}</div>
+          </div>
+
+          <!-- Pessoa jurídica -->
+          <div class="proposta-cliente-somente-j">
+            <div class="info-row"><strong>Razão social:</strong> ${cliente_razao_social}</div>
+            <div class="info-row"><strong>Nome fantasia:</strong> ${cliente_nome}</div>
+            <div class="info-row"><strong>CNPJ:</strong> ${cliente_cnpj}</div>
+            <div class="info-row"><strong>Inscrição estadual:</strong> ${cliente_inscricao_estadual}</div>
+            <div class="info-row"><strong>UF (inscrição):</strong> ${cliente_ie_uf}</div>
+            <div class="info-row"><strong>Inscrição municipal:</strong> ${cliente_inscricao_municipal}</div>
+          </div>
+
+          <!-- Estrangeiro -->
+          <div class="proposta-cliente-somente-e">
+            <div class="info-row"><strong>Nome:</strong> ${cliente_nome}</div>
+            <div class="info-row"><strong>Documento:</strong> ${cliente_documento_estrangeiro}</div>
+            <div class="info-row"><strong>País:</strong> ${cliente_pais_origem}</div>
+          </div>
+        </div>
+      </div>
+
+      <!--
+        Texto plano (tags removidas — Word e trechos simples): ${proposta_descricao}, ${observacoes}, ${observacoes_internas}
+        HTML tal como guardado (só .html; não existem no .docx): ${proposta_descricao_html}, ${observacoes_html}, ${observacoes_internas_html}
+      -->
+      <div class="desc-section">
+        <div class="section-label">
+          <div class="bar"></div>
+          <span>Descrição da proposta</span>
+        </div>
+        <div class="rich-html-block proposta-rich-html">${proposta_descricao_html}</div>
+      </div>
+
+      <!-- ITENS -->
+      <div class="items-section">
+        <div class="section-label">
+          <div class="bar"></div>
+          <span>Itens Orçados</span>
+        </div>
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Tipo</th>
+              <th>Descrição</th>
+              <th>Qtd</th>
+              <th>Unit. (R$)</th>
+              <th>Desc. (%)</th>
+              <th>Total (R$)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- linha de template – será clonada para cada item -->
+            <tr>
+              <td>${item_linha}</td>
+              <td>${item_tipo}</td>
+              <td>${item_descricao}</td>
+              <td>${item_quantidade}</td>
+              <td>${item_preco_unitario}</td>
+              <td>${item_desconto_percentual}</td>
+              <td>${item_total}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- TOTAIS -->
+      <div class="totals-section">
+        <div class="section-label">
+          <div class="bar"></div>
+          <span>Totais</span>
+        </div>
+        <div class="totals-box">
+          <div class="total-row">
+            <span class="t-label">Subtotal produtos</span>
+            <span class="t-value">R$ ${total_produtos}</span>
+          </div>
+          <div class="total-row">
+            <span class="t-label">Subtotal serviços</span>
+            <span class="t-value">R$ ${total_servicos}</span>
+          </div>
+          <div class="total-row">
+            <span class="t-label">Descontos</span>
+            <span class="t-value">R$ ${total_descontos}</span>
+          </div>
+          <div class="total-row grand">
+            <span class="t-label">TOTAL GERAL</span>
+            <span class="t-value">R$ ${total_geral}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- OBSERVAÇÕES -->
+      <div class="obs-section">
+        <div class="section-label">
+          <div class="bar"></div>
+          <span>Observações</span>
+        </div>
+        <div class="obs-grid">
+          <div class="obs-block">
+            <div class="obs-label">Observações ao Cliente</div>
+            <div class="obs-text proposta-rich-html">${observacoes_html}</div>
+          </div>
+          <div class="obs-block">
+            <div class="obs-label">Observações Internas</div>
+            <div class="obs-text proposta-rich-html">${observacoes_internas_html}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ASSINATURAS -->
+      <div class="signatures">
+        <div class="sig-box">
+          <div class="sig-line"></div>
+          <div class="sig-label">Assinatura do Cliente</div>
+        </div>
+        <div class="sig-box">
+          <div class="sig-line"></div>
+          <div class="sig-label">Responsável / Vendedor</div>
+        </div>
+      </div>
+
+    </div><!-- /body -->
+
+    <!-- RODAPÉ -->
+    <div class="footer">
+      <p>Documento gerado em ${gerado_em} &nbsp;—&nbsp; LivreOS — ERP Open Source Livre</p>
+      
+    </div>
+
+  </div><!-- /page -->
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proposta comercial — ${proposta_referencia}</title>
+  <style>
+    * { box-sizing: border-box; }
+    @page { size: A4 portrait; margin: 10mm; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #111827;
+      margin: 0;
+      background: #f3f4f6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    body:not(.tipo-cliente-F) .proposta-cliente-somente-f { display: none !important; }
+    body:not(.tipo-cliente-J) .proposta-cliente-somente-j { display: none !important; }
+    body:not(.tipo-cliente-E) .proposta-cliente-somente-e { display: none !important; }
+    body:not(.tipo-cliente-nenhum) .proposta-cliente-sem-cadastro { display: none !important; }
+
+    .page {
+      max-width: 960px;
+      margin: 24px auto;
+      background: #fff;
+      padding: 20px 20px 32px;
+      position: relative;
+      flex: 1 0 auto;
+      width: 100%;
+    }
+    header {
+      display: grid;
+      grid-template-columns: 140px 1fr 220px;
+      gap: 16px;
+      align-items: center;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 16px;
+    }
+    .logo img { max-width: 140px; max-height: 72px; height: auto; object-fit: contain; }
+    .emitente h1 { font-size: 18px; margin: 0 0 6px 0; }
+    .emitente p, .contato p { margin: 2px 0; font-size: 13px; color: #374151; }
+    .contato { text-align: right; }
+    .titulo { margin: 18px 0 12px; }
+    .titulo h2 { margin: 0; font-size: 20px; }
+    .bloco { margin-top: 16px; }
+    .bloco h3 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: #374151;
+    }
+    .dados { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px; color: #374151; }
+    .dados p { margin: 2px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+    th, td { border: 1px solid #e5e7eb; padding: 8px; }
+    th { background: #f3f4f6; text-align: left; }
+    .text-right { text-align: right; }
+    .text-center { text-align: center; }
+    .totais { margin-top: 12px; display: flex; justify-content: flex-end; }
+    .totais table { width: 320px; }
+    .assinaturas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 36px;
+    }
+    .assinaturas div {
+      border-top: 1px solid #d1d5db;
+      padding-top: 6px;
+      text-align: center;
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .observacao {
+      border: 1px solid #e5e7eb;
+      padding: 10px;
+      background: #f9fafb;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .proposta-rich-html p { margin: 0.35em 0; }
+    .proposta-rich-html ul, .proposta-rich-html ol { margin: 0.35em 0 0.35em 1.2em; }
+    p.proposta-cliente-com-endereco:empty { display: none; }
+    .pdf-footer {
+      margin-top: auto;
+      padding: 12px;
+      border-top: 1px solid #e2e8f0;
+      background: #f8fafc;
+      font-size: 10px;
+      color: #6b7280;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    @media print {
+      @page { margin: 8mm 10mm; }
+      html, body { background: #fff; min-height: 280mm; font-size: 11px; line-height: 1.35; }
+      .page { margin: 0 auto; box-shadow: none; padding: 0 0 6mm; max-width: 100%; }
+      header { grid-template-columns: 110px 1fr 180px; gap: 10px; padding-bottom: 10px; }
+      .logo img { max-width: 110px; max-height: 52px; }
+      .emitente h1 { font-size: 16px; }
+      .titulo h2 { font-size: 17px; }
+      th, td { padding: 5px 7px; font-size: 11px; }
+      .bloco { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body class="${cliente_classe_tipo_body}">
+  <div class="page">
+    <header>
+      <div class="logo">${empresa_logo}</div>
+      <div class="emitente">
+        <h1>${empresa_nome}</h1>
+        <p>${empresa_razao_social}</p>
+        <p>CNPJ: ${empresa_cnpj}</p>
+        <p>${empresa_endereco}</p>
+      </div>
+      <div class="contato">
+        <p><strong>Tel:</strong> ${empresa_telefone}</p>
+        <p><strong>${empresa_email}</strong></p>
+      </div>
+    </header>
+
+    <div class="titulo">
+      <h2>Proposta comercial — ${proposta_titulo}</h2>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th class="text-center">Referência</th>
+          <th class="text-center">Versão</th>
+          <th class="text-center">Emissão</th>
+          <th class="text-center">Validade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text-center">${proposta_referencia}</td>
+          <td class="text-center">${proposta_versao}</td>
+          <td class="text-center">${data_emissao}</td>
+          <td class="text-center">${validade_em}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="bloco">
+      <h3>Dados do cliente</h3>
+      <div class="dados">
+        <div>
+          <p class="proposta-cliente-sem-cadastro"><em>Cliente não informado na proposta.</em></p>
+          <p class="proposta-cliente-somente-f"><strong>${cliente_nome}</strong></p>
+          <p class="proposta-cliente-somente-f">${cliente_documento_rotulo}: ${cliente_cpf}</p>
+          <p class="proposta-cliente-somente-f">RG: ${cliente_rg} · Nasc.: ${cliente_data_nascimento}</p>
+          <p class="proposta-cliente-somente-j"><strong>${cliente_razao_social}</strong></p>
+          <p class="proposta-cliente-somente-j">${cliente_documento_rotulo}: ${cliente_cnpj}</p>
+          <p class="proposta-cliente-somente-e"><strong>${cliente_nome}</strong></p>
+          <p class="proposta-cliente-somente-e">Documento: ${cliente_documento_estrangeiro}</p>
+          <p class="proposta-cliente-somente-e">País: ${cliente_pais_origem}</p>
+          <p class="proposta-cliente-com-endereco">${cliente_endereco}</p>
+          <p>Vendedor: ${vendedor_nome}</p>
+        </div>
+        <div class="text-right">
+          <p>Tipo: ${cliente_tipo_pessoa_label}</p>
+          <p>Validade (${validade_dias} dias)</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bloco">
+      <h3>Descrição / objeto da proposta</h3>
+      <div class="observacao proposta-rich-html">${proposta_descricao_html}</div>
+    </div>
+
+    <div class="bloco">
+      <h3>Itens</h3>
+      <table>
+        <thead>
+          <tr>
+            <th class="text-center" style="width:6%">#</th>
+            <th style="width:10%">Tipo</th>
+            <th>Descrição</th>
+            <th class="text-center" style="width:8%">Qtd</th>
+            <th class="text-right" style="width:12%">Unit.</th>
+            <th class="text-right" style="width:12%">Desconto</th>
+            <th class="text-right" style="width:12%">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${itens_tabela_linhas}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="totais">
+      <table>
+        <tbody>
+          <tr>
+            <td>Total produtos</td>
+            <td class="text-right">R$ ${total_produtos}</td>
+          </tr>
+          <tr>
+            <td>Total serviços</td>
+            <td class="text-right">R$ ${total_servicos}</td>
+          </tr>
+          <tr>
+            <td>Descontos</td>
+            <td class="text-right">R$ ${total_descontos}</td>
+          </tr>
+          <tr>
+            <td><strong>Total geral</strong></td>
+            <td class="text-right"><strong>R$ ${total_geral}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="bloco">
+      <h3>Observações ao cliente</h3>
+      <div class="observacao proposta-rich-html">${observacoes_html}</div>
+    </div>
+
+    <div class="assinaturas">
+      <div>Assinatura do cliente</div>
+      <div>Responsável comercial / empresa</div>
+    </div>
+  </div>
+
+  <footer class="pdf-footer">
+    Documento gerado em ${gerado_em} · ${empresa_nome} — Proposta comercial
+  </footer>
+</body>
+</html>

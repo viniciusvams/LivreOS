@@ -1,0 +1,37 @@
+{
+    "$schema": "https://www.schemastore.org/package.json",
+    "private": true,
+    "license": "AGPL-3.0-only",
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite",
+        "vendor:jodit": "node scripts/vendor-jodit.mjs",
+        "postinstall": "node scripts/vendor-jodit.mjs"
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.4.20",
+        "axios": "^1.11.0",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^1.0.0",
+        "postcss": "^8.4.47",
+        "tailwindcss": "^3.4.17",
+        "vite": "^6.4.1"
+    },
+    "dependencies": {
+        "@floating-ui/dom": "^1.7.4",
+        "@fullcalendar/core": "^6.1.19",
+        "@fullcalendar/daygrid": "^6.1.19",
+        "@fullcalendar/interaction": "^6.1.19",
+        "@fullcalendar/list": "^6.1.19",
+        "@fullcalendar/timegrid": "^6.1.19",
+        "@popperjs/core": "^2.11.8",
+        "alpinejs": "^3.14.9",
+        "apexcharts": "^5.3.5",
+        "flatpickr": "^4.6.13",
+        "jodit": "4.2.27",
+        "jsvectormap": "^1.7.0",
+        "prismjs": "^1.30.0",
+        "swiper": "^12.0.3"
+    }
+}

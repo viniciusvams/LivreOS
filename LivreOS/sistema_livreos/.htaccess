@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Redirect all requests into the public folder (evita loop: não reescrever se o path já for public/...)
+    RewriteCond $1 !^public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

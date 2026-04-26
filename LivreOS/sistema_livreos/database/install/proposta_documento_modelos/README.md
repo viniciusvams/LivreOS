@@ -1,0 +1,5 @@
+# Modelos de instalação — propostas comerciais
+
+- **`3/template.html`** — cópia de referência do modelo HTML padrão (documento 02). O seeder `PropostaDocumentoModeloPadraoSeeder` copia este ficheiro para `storage/app/private/proposta_documento_modelos/3/template.html` quando a tabela `proposta_documento_modelos` está vazia (ids 1–3).
+- **Texto rico:** no HTML, `${proposta_descricao_html}`, `${observacoes_html}` e `${observacoes_internas_html}` preservam o HTML guardado na proposta; `${proposta_descricao}`, `${observacoes}` e `${observacoes_internas}` são texto plano (tags removidas), ideais para Word — ver `docs/PROPOSTA_DOCX_TAGS.md` e `docs/PROPOSTA_HTML_02.md`.
+- Os modelos **Word** (ids 1 e 2) são **gerados em PHP** por `PropostaDocumentoModeloDocxFabrica`; não há `.docx` versionado aqui. Após alterar a fábrica, regenere o DOCX «Padrão — estilo impressão OS»: `php artisan proposta:instalar-modelo-docx-padrao --force` (o modelo «Proposta Padrão DOCX» partilha o mesmo gerador — substitua `template.docx` na pasta id 2 se quiser o ficheiro alinhado).

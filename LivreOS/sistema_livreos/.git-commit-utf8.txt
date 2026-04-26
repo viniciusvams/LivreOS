@@ -1,0 +1,11 @@
+feat: Página pública de equipamento via QR Code e melhorias
+
+- Página pública /e/{token} para identificação de equipamento (sem senha)
+- Token público em vez de ID, histórico de OS, log de acessos
+- Botões WhatsApp e telefone na página pública
+- QR Code da etiqueta aponta para página pública
+- Prefill ao abrir nova OS: cliente e equipamento já selecionados, passo 3
+- Opção excluir logo no cadastro da empresa
+- Opção excluir OS na listagem de ordens de serviço
+- Logo da empresa exibido via base64 (evita storage:link no Windows)
+- redirect()->guest para manter intended URL após login
