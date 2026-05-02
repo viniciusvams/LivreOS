@@ -1,3 +1,16 @@
+# LivreOS — Sistema de Ordem de Serviço ERP Open Source
+
+**LivreOS** é um sistema de gestão (ERP) open source gratuito com módulo completo de 
+**Ordem de Serviço (OS)**, PDV, financeiro, estoque e clientes.  
+Desenvolvido para MEI, microempresas e pequenas empresas brasileiras.  
+Licença AGPL 3.0 — sem mensalidade, sem limitações.
+
+[![Stars](https://img.shields.io/github/stars/viniciusvams/LivreOS?style=social)](https://github.com/viniciusvams/LivreOS)
+[![License](https://img.shields.io/badge/license-AGPL--3.0-green)](LICENSE)
+[![PHP](https://img.shields.io/badge/PHP-8.2+-blue)](https://php.net)
+[![Laravel](https://img.shields.io/badge/Laravel-11-red)](https://laravel.com)
+
+
 🚀 Apresentação: LivreOS Beta 1.0
 O LivreOS é um sistema ERP de código aberto projetado para ser seguro e fácil de instalar, mesmo em ambientes de hospedagem sem acesso ao terminal (SSH). Para garantir a segurança dos seus dados, o sistema utiliza uma estrutura de pastas profissional:
 
