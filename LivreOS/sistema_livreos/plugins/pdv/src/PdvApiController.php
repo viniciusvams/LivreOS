@@ -996,8 +996,8 @@ class PdvApiController
         if (!$v) {
             abort(404, 'Venda não encontrada.');
         }
-        if ($v->status !== Venda::STATUS_FINALIZADA) {
-            abort(422, 'Comprovante disponível apenas para vendas finalizadas.');
+        if ($v->status !== Venda::STATUS_FINALIZADA && $v->status !== Venda::STATUS_CANCELADA) {
+            abort(422, 'Comprovante disponível apenas para vendas finalizadas ou canceladas.');
         }
 
         $empresa = null;
@@ -1074,17 +1074,33 @@ class PdvApiController
             'empresa' => $empresa,
             'empresaLogoBase64' => $empresaLogoBase64,
             'empresaLogoUrl' => null,
+            'formatoImpressao' => get_option('pdv_formato_impressao', 'A4', 'pdv'),
             'seriaisGarantia' => $v->seriais_garantia ?? [],
             'observacoesVenda' => $v->observacoes ? trim((string) $v->observacoes) : '',
         ];
 
         $html = view('pdv::comprovante-venda-pdf', $data)->render();
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html);
-        $pdf->setPaper('A4', 'portrait');
-        $pdf->setOption('margin-top', '6mm');
-        $pdf->setOption('margin-bottom', '10mm');
-        $pdf->setOption('margin-left', '10mm');
-        $pdf->setOption('margin-right', '10mm');
+        $formatoImpressao = get_option('pdv_formato_impressao', 'A4', 'pdv');
+        if ($formatoImpressao === '80mm') {
+            $pdf->setPaper(array(0, 0, 226.77, 1000), 'portrait');
+            $pdf->setOption('margin-top', '2mm');
+            $pdf->setOption('margin-bottom', '2mm');
+            $pdf->setOption('margin-left', '2mm');
+            $pdf->setOption('margin-right', '2mm');
+        } elseif ($formatoImpressao === '58mm') {
+            $pdf->setPaper(array(0, 0, 164.4, 1000), 'portrait');
+            $pdf->setOption('margin-top', '2mm');
+            $pdf->setOption('margin-bottom', '2mm');
+            $pdf->setOption('margin-left', '2mm');
+            $pdf->setOption('margin-right', '2mm');
+        } else {
+            $pdf->setPaper('A4', 'portrait');
+            $pdf->setOption('margin-top', '6mm');
+            $pdf->setOption('margin-bottom', '10mm');
+            $pdf->setOption('margin-left', '10mm');
+            $pdf->setOption('margin-right', '10mm');
+        }
         $filename = 'comprovante-venda-' . $v->id . '.pdf';
         return $pdf->stream($filename);
     }
@@ -1764,13 +1780,32 @@ class PdvApiController
     public function orcamentoPdf(Request $request)
     {
         $data = $this->orcamentoPrintData($request);
+        $formatoImpressao = get_option('pdv_formato_impressao', 'A4', 'pdv');
+        $data['formatoImpressao'] = $formatoImpressao;
+        
         $html = view('pdv::orcamento-print', $data)->render();
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html);
-        $pdf->setPaper('A4', 'portrait');
-        $pdf->setOption('margin-top', '6mm');
-        $pdf->setOption('margin-bottom', '10mm');
-        $pdf->setOption('margin-left', '10mm');
-        $pdf->setOption('margin-right', '10mm');
+        
+        if ($formatoImpressao === '80mm') {
+            $pdf->setPaper(array(0, 0, 226.77, 1000), 'portrait');
+            $pdf->setOption('margin-top', '2mm');
+            $pdf->setOption('margin-bottom', '2mm');
+            $pdf->setOption('margin-left', '2mm');
+            $pdf->setOption('margin-right', '2mm');
+        } elseif ($formatoImpressao === '58mm') {
+            $pdf->setPaper(array(0, 0, 164.4, 1000), 'portrait');
+            $pdf->setOption('margin-top', '2mm');
+            $pdf->setOption('margin-bottom', '2mm');
+            $pdf->setOption('margin-left', '2mm');
+            $pdf->setOption('margin-right', '2mm');
+        } else {
+            $pdf->setPaper('A4', 'portrait');
+            $pdf->setOption('margin-top', '6mm');
+            $pdf->setOption('margin-bottom', '10mm');
+            $pdf->setOption('margin-left', '10mm');
+            $pdf->setOption('margin-right', '10mm');
+        }
+        
         $numero = $data['numeroOrcamento'] ?? 'orcamento';
         $filename = 'orcamento-' . preg_replace('/[^a-z0-9]/i', '-', (string) $numero) . '.pdf';
         return $pdf->stream($filename);

@@ -53,6 +53,7 @@
     $pagamentos = $pagamentos ?? [];
     $seriaisGarantia = $seriaisGarantia ?? [];
     $observacoesVenda = $observacoesVenda ?? (isset($venda) ? trim((string) ($venda->observacoes ?? '')) : '');
+    $formatoImpressao = $formatoImpressao ?? 'A4';
 @endphp
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -62,9 +63,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * { box-sizing: border-box; }
-        @page { size: A4; margin: 10mm; }
         body { font-family: Arial, Helvetica, sans-serif; color: #111827; margin: 0; padding: 0; background: #fff; }
         .page { max-width: 100%; margin: 0; padding: 0 0 16px 0; }
+        
+        @if($formatoImpressao === '80mm' || $formatoImpressao === '58mm')
+            /* Estilos para bobina térmica */
+            @page { margin: 2mm; }
+            body { font-size: {{ $formatoImpressao === '58mm' ? '10px' : '11px' }}; }
+            .header-table { width: 100%; border-collapse: collapse; border: none; margin-bottom: 4px; border-bottom: 1px dashed #e5e7eb; padding-bottom: 4px; }
+            .header-table td { display: block; width: 100%; text-align: center; padding: 2px; }
+            .header-table .logo-cell { padding-right: 0; text-align: center; }
+            .header-table .logo-cell img { max-width: {{ $formatoImpressao === '58mm' ? '80px' : '120px' }}; margin: 0 auto 6px auto; }
+            .emitente h1 { font-size: {{ $formatoImpressao === '58mm' ? '14px' : '16px' }}; margin: 0 0 4px 0; }
+            .emitente p, .contato p { margin: 1px 0; font-size: {{ $formatoImpressao === '58mm' ? '10px' : '11px' }}; }
+            .contato-cell { margin-top: 4px; }
+            
+            .titulo { text-align: center; margin: 8px 0; border-bottom: 1px dashed #e5e7eb; padding-bottom: 4px; }
+            .titulo-table { width: 100%; border-collapse: collapse; }
+            .titulo-table td { display: block; width: 100%; text-align: center; padding: 2px 0; }
+            .titulo h2 { margin: 0; font-size: {{ $formatoImpressao === '58mm' ? '12px' : '14px' }}; }
+            .titulo span { font-size: {{ $formatoImpressao === '58mm' ? '10px' : '11px' }}; }
+            
+            .bloco { margin-top: 8px; border-bottom: 1px dashed #e5e7eb; padding-bottom: 8px; }
+            .bloco h3 { margin: 0 0 4px 0; font-size: {{ $formatoImpressao === '58mm' ? '11px' : '12px' }}; text-align: center; }
+            .dados { font-size: {{ $formatoImpressao === '58mm' ? '10px' : '11px' }}; text-align: center; }
+            
+            table.tabela-itens { width: 100%; border-collapse: collapse; font-size: {{ $formatoImpressao === '58mm' ? '9px' : '11px' }}; margin-top: 4px; }
+            table.tabela-itens th, table.tabela-itens td { padding: 4px 2px; border-bottom: 1px dashed #e5e7eb; border-top: none; border-left: none; border-right: none; }
+            table.tabela-itens th { background: transparent; border-bottom: 1px solid #9ca3af; }
+            
+            .totais { margin-top: 8px; font-size: {{ $formatoImpressao === '58mm' ? '11px' : '12px' }}; border-bottom: 1px dashed #e5e7eb; padding-bottom: 8px; }
+            .totais table { width: 100%; border-collapse: collapse; }
+            .totais td { padding: 4px; border: none; }
+            
+            table.tabela-pagamentos { width: 100%; border-collapse: collapse; font-size: {{ $formatoImpressao === '58mm' ? '10px' : '11px' }}; margin-top: 4px; }
+            table.tabela-pagamentos th, table.tabela-pagamentos td { padding: 4px; border-bottom: 1px dashed #e5e7eb; border-top: none; border-left: none; border-right: none; }
+            table.tabela-pagamentos th { background: transparent; }
+            
+            .rodape-comprovante { margin-top: 12px; padding: 8px 0; background: transparent; border: none; font-size: {{ $formatoImpressao === '58mm' ? '9px' : '10px' }}; text-align: center; color: #6b7280; }
+            .observacao-bloco { border: none; padding: 4px 0; background: transparent; font-size: {{ $formatoImpressao === '58mm' ? '10px' : '11px' }}; }
+            .text-right { text-align: right; }
+            .text-center { text-align: center; }
+        @else
+            /* Estilos para A4 (Padrão) */
+            @page { size: A4; margin: 10mm; }
         .header-table { width: 100%; border-collapse: collapse; border: none; margin-bottom: 4px; border-bottom: 2px solid #e5e7eb; }
         .header-table td { border: none; vertical-align: middle; padding: 0 16px 16px 0; }
         .header-table .logo-cell { width: 140px; padding-right: 16px; }
@@ -94,8 +136,9 @@
         table.tabela-pagamentos { width: 100%; max-width: 400px; margin-top: 8px; border-collapse: collapse; font-size: 13px; }
         table.tabela-pagamentos th, table.tabela-pagamentos td { border: 1px solid #e5e7eb; padding: 8px; }
         table.tabela-pagamentos th { background: #f3f4f6; }
-        .rodape-comprovante { margin-top: 20px; padding: 12px; background: #f9fafb; border: 1px solid #e5e7eb; font-size: 11px; color: #6b7280; text-align: center; }
-        .observacao-bloco { border: 1px solid #e5e7eb; padding: 10px; background: #f9fafb; white-space: pre-wrap; font-size: 13px; color: #374151; }
+            .rodape-comprovante { margin-top: 20px; padding: 12px; background: #f9fafb; border: 1px solid #e5e7eb; font-size: 11px; color: #6b7280; text-align: center; }
+            .observacao-bloco { border: 1px solid #e5e7eb; padding: 10px; background: #f9fafb; white-space: pre-wrap; font-size: 13px; color: #374151; }
+        @endif
     </style>
 </head>
 <body>
@@ -300,6 +343,7 @@
                 Guarde este comprovante para sua referência.
             @endif
             <br>Obrigado pela preferência!
+            <br><br>Emitido em {{ now()->format('d/m/Y \à\s H:i') }} &middot; LivreOS - ERP Open Source Livre
         </div>
     </div>
 </body>

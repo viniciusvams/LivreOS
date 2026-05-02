@@ -264,6 +264,10 @@
             <div class="observacao">{{ $observacao }}</div>
         </div>
         @endif
+
+        <div style="margin-top: 20px; text-align: center; font-size: 11px; color: #6b7280;">
+            Emitido em {{ now()->format('d/m/Y \à\s H:i') }} &middot; LivreOS - ERP Open Source Livre
+        </div>
     </div>
 </body>
 </html>

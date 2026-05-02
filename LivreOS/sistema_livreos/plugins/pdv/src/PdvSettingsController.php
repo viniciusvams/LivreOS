@@ -96,6 +96,7 @@ class PdvSettingsController
             'pdv_cliente_balcao_id' => 'nullable|integer|exists:clientes,id|required_if:pdv_cliente_balcao_modo,selecionar',
             'pdv_numero_venda_inicial' => 'nullable|integer|min:1',
             'pdv_controle_estoque' => 'nullable',
+            'pdv_formato_impressao' => 'nullable|in:A4,80mm,58mm',
             'categorias_com_serial' => 'nullable|array',
             'categorias_com_serial.*' => 'integer|exists:categorias_produtos,id',
             'produtos_com_serial' => 'nullable|array',
@@ -121,6 +122,9 @@ class PdvSettingsController
 
         $numeroInicial = $request->input('pdv_numero_venda_inicial');
         update_option('pdv_numero_venda_inicial', $numeroInicial !== null && $numeroInicial !== '' ? max(1, (int) $numeroInicial) : 1, 'pdv');
+
+        $formatoImpressao = $request->input('pdv_formato_impressao', 'A4');
+        update_option('pdv_formato_impressao', $formatoImpressao, 'pdv');
 
         update_option('pdv_controle_estoque', $request->filled('pdv_controle_estoque'), 'pdv');
 

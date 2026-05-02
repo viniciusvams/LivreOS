@@ -1008,7 +1008,10 @@
                                     <span class="material-symbols-outlined text-lg">visibility</span>
                                     Visualizar
                                 </button>
-                                <button x-show="v.status === 'finalizada' && (podeCancelarVendaTotal || podeCancelarVendaParcial)" type="button" @click="abrirModalCancelarHistorico(v.id)" class="px-4 py-2.5 rounded-lg bg-red-500/10 text-red-600 dark:text-red-400 text-sm font-semibold flex items-center justify-center">
+                                <a :href="'{{ url('/plugin/pdv/api/vendas') }}/' + v.id + '/comprovante-pdf'" target="_blank" x-show="v.status === 'finalizada' || v.status === 'cancelada'" class="px-4 py-2.5 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-sm font-semibold flex items-center justify-center" title="Imprimir 2ª via">
+                                    <span class="material-symbols-outlined text-lg">print</span>
+                                </a>
+                                <button x-show="v.status === 'finalizada' && (podeCancelarVendaTotal || podeCancelarVendaParcial)" type="button" @click="abrirModalCancelarHistorico(v.id)" class="px-4 py-2.5 rounded-lg bg-red-500/10 text-red-600 dark:text-red-400 text-sm font-semibold flex items-center justify-center" title="Excluir / Cancelar">
                                     <span class="material-symbols-outlined text-lg">cancel</span>
                                 </button>
                             </div>

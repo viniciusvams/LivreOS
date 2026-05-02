@@ -31,6 +31,7 @@
     $numeroVendaInicial = get_option('pdv_numero_venda_inicial', 1, 'pdv');
     $numeroVendaInicial = is_numeric($numeroVendaInicial) ? (int) $numeroVendaInicial : 1;
     if ($numeroVendaInicial < 1) $numeroVendaInicial = 1;
+    $formatoImpressao = get_option('pdv_formato_impressao', 'A4', 'pdv');
 
     // Dados para Usuários e permissões (habilitar caixa)
     $usuarios = \App\Models\User::orderBy('name')->get(['id', 'name', 'email']);
@@ -119,6 +120,15 @@
                 <span class="text-sm text-gray-700 dark:text-gray-300">Impedir venda com estoque zerado ou insuficiente</span>
             </label>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 ml-6">Quando ativo, o PDV não permite finalizar venda se algum produto estiver sem estoque (ou quantidade solicitada maior que o disponível). Quem tiver permissão "Pode vender com estoque zerado" (em Usuários e permissões) poderá autorizar digitando a senha; a autorização fica registrada na venda.</p>
+        </div>
+        <div class="border-t border-gray-200 pt-6 dark:border-gray-700">
+            <h3 class="text-sm font-medium text-gray-800 dark:text-white/90 mb-2">Formato de Impressão do Comprovante</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Defina o formato de impressão padrão para os cupons de venda gerados pelo PDV.</p>
+            <select name="pdv_formato_impressao" class="w-full max-w-md rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm">
+                <option value="A4" {{ $formatoImpressao === 'A4' ? 'selected' : '' }}>Papel A4 (Padrão)</option>
+                <option value="80mm" {{ $formatoImpressao === '80mm' ? 'selected' : '' }}>Bobina Térmica 80mm</option>
+                <option value="58mm" {{ $formatoImpressao === '58mm' ? 'selected' : '' }}>Bobina Térmica 58mm</option>
+            </select>
         </div>
         <div class="border-t border-gray-200 pt-6 dark:border-gray-700">
             <h3 class="text-sm font-medium text-gray-800 dark:text-white/90 mb-2">Categorias que exigem Serial/IMEI</h3>
