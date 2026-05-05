@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "outputDirectory": "public",
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.6.0"
