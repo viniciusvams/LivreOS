@@ -1,0 +1,27 @@
+﻿{
+  "version": 2,
+  "framework": null,
+  "functions": {
+    "api/index.php": {
+      "runtime": "vercel-php@0.7.2"
+    }
+  },
+  "routes": [
+    { "src": "/build/(.*)",  "dest": "/public/build/$1" },
+    { "src": "/assets/(.*)", "dest": "/public/assets/$1" },
+    {
+      "src": "/(.+\\.(css|js|ico|png|jpg|jpeg|gif|svg|webp|avif|woff|woff2|ttf|eot|map|txt|xml))",
+      "dest": "/public/$1"
+    },
+    { "src": "/(.*)", "dest": "/api/index.php" }
+  ],
+  "env": {
+    "APP_ENV": "production",
+    "APP_DEBUG": "false",
+    "LOG_CHANNEL": "stderr",
+    "SESSION_DRIVER": "cookie",
+    "CACHE_DRIVER": "array",
+    "QUEUE_CONNECTION": "sync",
+    "VIEW_COMPILED_PATH": "/tmp/framework/views"
+  }
+}
