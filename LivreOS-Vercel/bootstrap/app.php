@@ -50,6 +50,18 @@ $app = Application::configure(basePath: dirname(__DIR__))
             $aliases = array_merge($aliases, apply_filters('middleware.aliases', []));
         }
         $middleware->alias($aliases);
+		// Confia no proxy da Vercel para aceitar os cookies seguros e evitar o erro 419
+        $middleware->trustProxies(at: '*');
+		
+		// 2. A SOLUÇÃO: Ignora o token CSRF nas rotas de autenticação, 
+        // já que a Vercel bagunça os cookies e faz cache do formulário.
+        $middleware->validateCsrfTokens(except: [
+            'signin',
+            'login',
+            'logout',
+            'password/*',
+            'api/*'
+        ]);
         $middleware->redirectGuestsTo(fn () => route('signin'));
         // Permite acesso pelo IP da máquina (ex.: http://192.168.x.x/erp/) em ambiente local / Laragon.
         // Não usar app()->environment() aqui: nessa fase o container ainda não tem o binding 'env' (erro ao acessar por subpasta).

@@ -10,6 +10,18 @@ Licença AGPL 3.0 — sem mensalidade, sem limitações.
 [![PHP](https://img.shields.io/badge/PHP-8.2+-blue)](https://php.net)
 [![Laravel](https://img.shields.io/badge/Laravel-11-red)](https://laravel.com)
 
+## 🚀 Deploy para Vercel (Gratuito)
+
+O LivreOS é totalmente compatível com a **Vercel**. Como a Vercel não fornece um banco de dados MySQL nativo, recomendamos o uso de um provedor externo gratuito como o **[Aiven](https://aiven.io/mysql)** ou **[TiDB Serverless](https://www.pingcap.com/tidb-serverless/)**.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/viniciusvams/LivreOS/tree/main/LivreOS-Vercel&env=DB_HOST,DB_PORT,DB_DATABASE,DB_USERNAME,DB_PASSWORD,APP_KEY,SETUP_TOKEN&envDescription=Preencha%20os%20dados%20do%20seu%20banco%20MySQL%20externo%20e%20gere%20uma%20APP_KEY%20(php%20artisan%20key:generate%20--show))
+
+### Passos após o Deploy:
+Após a conclusão do deploy na Vercel, você precisa criar as tabelas no seu banco de dados externo:
+1. Acesse: `https://seu-projeto.vercel.app/setup-database?token=SEU_SETUP_TOKEN` (use o token que você definiu nas variáveis de ambiente).
+2. O sistema irá configurar o banco de dados automaticamente e você poderá fazer o login!
+
+---
 
 🚀 Apresentação: LivreOS Beta 1.0
 O LivreOS é um sistema ERP de código aberto projetado para ser seguro e fácil de instalar, mesmo em ambientes de hospedagem sem acesso ao terminal (SSH). Para garantir a segurança dos seus dados, o sistema utiliza uma estrutura de pastas profissional:

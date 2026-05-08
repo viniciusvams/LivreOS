@@ -48,7 +48,7 @@ return [
     | System logo path (relative to public/)
     |--------------------------------------------------------------------------
     */
-    'logo_path' => env('APP_LOGO', 'logo/logo-Livre-OS .jpg'),
+    'logo_path' => env('APP_LOGO', 'images/logo-livre-os.jpg'),
 
     /*
     |--------------------------------------------------------------------------

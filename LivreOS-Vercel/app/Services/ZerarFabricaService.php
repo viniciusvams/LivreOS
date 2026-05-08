@@ -237,8 +237,8 @@ class ZerarFabricaService
      */
     protected function seedEmpresaPadrao(): void
     {
-        $logoRelPath = 'empresa/logos/logo-Livre-OS .jpg';
-        $logoOrigemPublic = public_path('logo/logo-Livre-OS .jpg');
+        $logoRelPath = 'empresa/logos/logo-livre-os.jpg';
+        $logoOrigemPublic = public_path('images/logo-livre-os.jpg');
         $logoDestinoStorage = storage_path('app/public/'.$logoRelPath);
         if (File::exists($logoOrigemPublic)) {
             $logoDir = dirname($logoDestinoStorage);

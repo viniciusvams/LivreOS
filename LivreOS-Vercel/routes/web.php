@@ -73,10 +73,22 @@ use App\Http\Controllers\RunTarefasInternoController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\TagController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Http\Request;
 
 // Dashboard principal (apenas usuários operacionais)
-Route::get('/', [DashboardController::class, 'index'])->middleware('operational')->name('dashboard');
+Route::get('/', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 Route::get('/dashboard/agenda', [DashboardController::class, 'agendaApi'])->middleware('operational')->name('dashboard.agenda');
+
+Route::get('/teste-gravar', function () {
+    session()->put('meu_teste', 'A SESSAO NO BANCO DE DADOS FUNCIONOU!');
+    return 'Dado gravado na sessão. <a href="/teste-ler">Clique aqui para tentar ler na outra página</a>';
+});
+
+Route::get('/teste-ler', function () {
+    return 'Resultado da sessão: ' . session()->get('meu_teste', 'FALHOU: O Vercel perdeu a sessão.');
+});
+
 
 // Ajuda ao usuário (manual em linguagem simples)
 Route::get('/ajuda', [AjudaController::class, 'index'])->middleware('operational')->name('ajuda.index');
@@ -725,4 +737,45 @@ Route::prefix('financeiro')->name('financeiro.')->middleware(['operational', 'pe
     // Configurações Financeiro (juros, multa, carência)
     Route::get('/configuracoes', [ConfiguracoesFinanceiroController::class, 'index'])->name('configuracoes.index');
     Route::put('/configuracoes', [ConfiguracoesFinanceiroController::class, 'update'])->name('configuracoes.update');
+	
+
+});
+
+// =========================================================
+// ROTA DE INSTALAÇÃO DO SISTEMA 
+// =========================================================
+Route::get('/setup-database', function (Request $request) {
+    // 1. Trava de segurança: Exige uma senha na URL para rodar
+    $tokenDesejado = env('SETUP_TOKEN', 'livreos-instalar-123'); // fallback de segurança
+    
+    if ($request->query('token') !== $tokenDesejado) {
+        return response('Acesso negado. Token de instalação inválido.', 403);
+    }
+
+    try {
+        // 2. Executa a criação das tabelas forçando a permissão em produção
+        Artisan::call('migrate', ['--force' => true]);
+        
+        // 3. Executa os Seeds (se você tiver dados iniciais como usuário admin padrão)
+         Artisan::call('db:seed', ['--force' => true]); 
+        
+        $log = Artisan::output();
+        
+        return response("
+            <div style='font-family: sans-serif; padding: 2rem;'>
+                <h1 style='color: green;'>✅ Banco de dados do LivreOS montado com sucesso!</h1>
+                <pre style='background: #333; color: #fff; padding: 1rem; border-radius: 8px;'>{$log}</pre>
+                <br>
+                <a href='/signin' style='padding: 10px 20px; background: blue; color: white; text-decoration: none; border-radius: 5px;'>Ir para o Login</a>
+            </div>
+        ", 200);
+
+    } catch (\Exception $e) {
+        return response("
+            <div style='font-family: sans-serif; padding: 2rem;'>
+                <h1 style='color: red;'>🚨 Erro ao montar o banco de dados:</h1>
+                <pre style='background: #fee; padding: 1rem; border-radius: 8px;'>{$e->getMessage()}</pre>
+            </div>
+        ", 500);
+    }
 });

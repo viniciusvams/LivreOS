@@ -32,7 +32,7 @@
                         <div class="mb-6 sm:mb-8">
                             @php
                                 $logoPathForm = config('app.logo_path');
-                                $logoSrcForm = ($logoPathForm && file_exists(public_path($logoPathForm))) ? asset($logoPathForm) : asset('images/logo/auth-logo.svg');
+                                $logoSrcForm = $logoPathForm ? asset($logoPathForm) : asset('images/logo/auth-logo.svg');
                             @endphp
                             {{-- Logo --}}
                             <div class="mb-6 flex justify-center sm:justify-start">
@@ -165,7 +165,7 @@
                         <a href="/" class="mb-4 flex items-center justify-center">
                             @php
                                 $logoPath = config('app.logo_path');
-                                $logoSrc = ($logoPath && file_exists(public_path($logoPath))) ? asset($logoPath) : asset('images/logo/auth-logo.svg');
+                                $logoSrc = $logoPath ? asset($logoPath) : asset('images/logo/auth-logo.svg');
                             @endphp
                             <span class="flex size-36 items-center justify-center rounded-full bg-white shadow-md sm:size-40">
                                 <img src="{{ $logoSrc }}" alt="{{ config('app.name') }}" class="max-h-20 w-auto object-contain sm:max-h-24" />

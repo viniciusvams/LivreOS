@@ -19,10 +19,7 @@
 @tailwind utilities;
 
 :root {
-  --font-*: initial;
   --font-outfit: Outfit, sans-serif;
-
-  --breakpoint-*: initial;
   --breakpoint-2xsm: 375px;
   --breakpoint-xsm: 425px;
   --breakpoint-3xl: 2000px;
@@ -994,10 +991,8 @@ pre[class*='language-'] {
   right: auto;
 }
 
-.swiper-button-prev, .swiper-button-next {
-    svg {
-        fill: none !important;
-    }
+.swiper-button-prev svg, .swiper-button-next svg {
+    fill: none !important;
 }
 
 @media screen and (max-width: 525px) {

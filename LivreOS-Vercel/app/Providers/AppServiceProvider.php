@@ -17,6 +17,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 
 /**
  * LivreOS - Application Service Provider
@@ -39,6 +40,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+		
+		// Força o Laravel a usar HTTPS para todos os assets e formulários na Vercel
+        if (config('app.env') === 'production') {
+            URL::forceScheme('https');
+        }
+		
         $this->applySqliteConcurrencyPragmas();
         $this->rebindDompdfComCaminhoPublicoResolvivel();
 

@@ -3,7 +3,7 @@
   "outputDirectory": "public",
   "functions": {
     "api/index.php": {
-      "runtime": "vercel-php@0.8.2"
+      "runtime": "vercel-php@0.7.1"
     }
   },
   "routes": [
@@ -18,10 +18,13 @@
   "env": {
     "APP_ENV": "production",
     "APP_DEBUG": "false",
-    "LOG_CHANNEL": "stderr",
+    "APP_LOGO": "images/logo-livre-os.jpg",
     "SESSION_DRIVER": "cookie",
+    "SESSION_SECURE_COOKIE": "true",
+    "LOG_CHANNEL": "stderr",
     "CACHE_DRIVER": "array",
     "QUEUE_CONNECTION": "sync",
-    "VIEW_COMPILED_PATH": "/tmp/framework/views"
+    "VIEW_COMPILED_PATH": "/tmp/framework/views",
+    "PHP_INI_DISPLAY_ERRORS": "Off"
   }
 }
