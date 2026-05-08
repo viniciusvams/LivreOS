@@ -25,6 +25,7 @@
     "CACHE_DRIVER": "array",
     "QUEUE_CONNECTION": "sync",
     "VIEW_COMPILED_PATH": "/tmp/framework/views",
-    "PHP_INI_DISPLAY_ERRORS": "Off"
+    "PHP_INI_DISPLAY_ERRORS": "Off",
+    "DB_CONNECTION": "mysql"
   }
 }
