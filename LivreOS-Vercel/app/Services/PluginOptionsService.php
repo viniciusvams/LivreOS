@@ -15,37 +15,32 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\File;
+use App\Models\Configuracao;
 
 /**
  * Options API para plugins (estilo WordPress).
- * Armazena opções por plugin em JSON em storage/app/plugin_options/{slug}.json
+ * Armazena opções por plugin no banco de dados (tabela configuracoes).
  */
 class PluginOptionsService
 {
-    protected function getOptionsPath(string $slug): string
+    protected function getOptionKey(string $slug): string
     {
-        return storage_path('app/plugin_options/' . $slug . '.json');
+        return 'plugin_options_' . $slug;
     }
 
     protected function loadOptions(string $slug): array
     {
-        $path = $this->getOptionsPath($slug);
-        if (!File::exists($path)) {
+        $val = Configuracao::getValue($this->getOptionKey($slug), null);
+        if ($val === null) {
             return [];
         }
-        $content = File::get($path);
-        $data = json_decode($content, true);
+        $data = json_decode($val, true);
         return is_array($data) ? $data : [];
     }
 
     protected function saveOptions(string $slug, array $options): void
     {
-        $dir = dirname($this->getOptionsPath($slug));
-        if (!File::isDirectory($dir)) {
-            File::makeDirectory($dir, 0755, true);
-        }
-        File::put($dir . DIRECTORY_SEPARATOR . $slug . '.json', json_encode($options, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        Configuracao::setValue($this->getOptionKey($slug), json_encode($options, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
     }
 
     public function getOption(string $slug, string $key, mixed $default = null): mixed
@@ -89,9 +84,6 @@ class PluginOptionsService
      */
     public function deleteAllOptions(string $slug): void
     {
-        $path = $this->getOptionsPath($slug);
-        if (File::exists($path)) {
-            File::delete($path);
-        }
+        Configuracao::where('chave', $this->getOptionKey($slug))->delete();
     }
 }

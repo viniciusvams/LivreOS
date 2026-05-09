@@ -18,6 +18,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
+use App\Models\Configuracao;
 
 /**
  * Gerenciador de plugins - Estilo WordPress.
@@ -82,6 +83,11 @@ class PluginManager
     public function bootstrap(): void
     {
         $this->bootstrapEarly();
+        
+        // Se estamos aqui, o DB provavelmente já está disponível. 
+        // Tentamos carregar os arquivos novamente caso o bootstrapEarly tenha falhado (comum na Vercel).
+        $this->loadPluginFilesOnly();
+
         if (self::$fullBootstrapped) {
             return;
         }
@@ -108,7 +114,7 @@ class PluginManager
         $dirs = glob($pluginsPath . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR) ?: [];
         foreach ($dirs as $pluginDir) {
             $slug = $this->getPluginSlugFromDir($pluginDir);
-            if ($slug === null) {
+            if ($slug === null || isset($this->plugins[$slug])) {
                 continue;
             }
             $pluginFile = $pluginDir . DIRECTORY_SEPARATOR . 'plugin.php';
@@ -155,23 +161,34 @@ class PluginManager
      */
     protected function getActivePluginsNative(): array
     {
-        $configPath = null;
-        if (function_exists('storage_path')) {
-            $configPath = storage_path('app/plugins_active.json');
-        } elseif (function_exists('base_path')) {
-            $configPath = base_path('storage/app/plugins_active.json');
-        } else {
-            $configPath = realpath(__DIR__ . '/../../storage/app/plugins_active.json') ?: null;
+        // Tenta ler do arquivo primeiro (retrocompatibilidade e performance em ambientes tradicionais)
+        $configPath = storage_path('app/plugins_active.json');
+        if (file_exists($configPath)) {
+            $content = @file_get_contents($configPath);
+            if ($content !== false) {
+                $data = json_decode($content, true);
+                if (is_array($data['plugins'] ?? null)) {
+                    return $data['plugins'];
+                }
+            }
         }
-        if (!$configPath || !file_exists($configPath)) {
-            return [];
+
+        // Se o arquivo não existir ou falhar, tenta ler do banco de dados
+        try {
+            // Verifica se a conexão com o banco está pronta. Se falhar aqui, o container
+            // Laravel pode estar em fase muito inicial (early bootstrap).
+            if (class_exists(Configuracao::class)) {
+                $val = Configuracao::getValue('plugins_active', null);
+                if ($val !== null) {
+                    $plugins = json_decode($val, true);
+                    return is_array($plugins) ? $plugins : [];
+                }
+            }
+        } catch (\Throwable) {
+            // Em fase de bootstrap muito precoce, o banco de dados pode não estar acessível
         }
-        $content = @file_get_contents($configPath);
-        if ($content === false) {
-            return [];
-        }
-        $data = json_decode($content, true);
-        return is_array($data['plugins'] ?? null) ? $data['plugins'] : [];
+
+        return [];
     }
 
     /**
@@ -219,19 +236,30 @@ class PluginManager
 
     public function getActivePlugins(): array
     {
-        $configPath = storage_path('app/plugins_active.json');
-        if (!File::exists($configPath)) {
-            return [];
+        $val = Configuracao::getValue('plugins_active', null);
+        if ($val === null) {
+            return $this->getActivePluginsNative();
         }
-        $content = File::get($configPath);
-        $data = json_decode($content, true);
-        return is_array($data['plugins'] ?? null) ? $data['plugins'] : [];
+        $plugins = json_decode($val, true);
+        return is_array($plugins) ? $plugins : [];
     }
 
     public function setActivePlugins(array $slugs): void
     {
-        $configPath = storage_path('app/plugins_active.json');
-        File::put($configPath, json_encode(['plugins' => $slugs], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        // Salva no banco de dados (Primário para Vercel/Serverless)
+        Configuracao::setValue('plugins_active', json_encode($slugs));
+
+        // Tenta salvar no arquivo para retrocompatibilidade em ambientes tradicionais
+        try {
+            $configPath = storage_path('app/plugins_active.json');
+            $dir = dirname($configPath);
+            if (!is_dir($dir)) {
+                @mkdir($dir, 0755, true);
+            }
+            @file_put_contents($configPath, json_encode(['plugins' => $slugs], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        } catch (\Throwable) {
+            // Ignora falhas de escrita em ambiente read-only (Vercel)
+        }
     }
 
     /**
