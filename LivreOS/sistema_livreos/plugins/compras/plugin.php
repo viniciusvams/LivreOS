@@ -17,12 +17,20 @@ require_once __DIR__ . '/src/Models/CompraImportacao.php';
 require_once __DIR__ . '/src/Models/CompraImportacaoItem.php';
 require_once __DIR__ . '/src/Models/CompraProdutoFornecedorMap.php';
 require_once __DIR__ . '/src/Models/CompraAuditLog.php';
+require_once __DIR__ . '/src/Models/OrdemCompra.php';
+require_once __DIR__ . '/src/Models/OrdemCompraItem.php';
+require_once __DIR__ . '/src/Models/RecebimentoCompra.php';
+require_once __DIR__ . '/src/Models/RecebimentoCompraItem.php';
 require_once __DIR__ . '/src/Services/NfeChaveValidator.php';
 require_once __DIR__ . '/src/Services/NfeXmlParserService.php';
 require_once __DIR__ . '/src/Services/NfeSefazConsultaService.php';
 require_once __DIR__ . '/src/Services/CompraPdfExtratorService.php';
 require_once __DIR__ . '/src/Services/ComprasFornecedorService.php';
 require_once __DIR__ . '/src/Services/CompraImportacaoDesfazerService.php';
+require_once __DIR__ . '/src/Services/OrdemCompraService.php';
+require_once __DIR__ . '/src/Services/RecebimentoCompraService.php';
+require_once __DIR__ . '/src/Services/EstoqueCompraService.php';
+require_once __DIR__ . '/src/Http/Controllers/OrdemCompraController.php';
 require_once __DIR__ . '/src/ComprasController.php';
 
 erp_register_activation_hook(__FILE__, function (): void {
@@ -138,14 +146,17 @@ add_filter('menu.items', function ($items) {
     }
     try {
         $path = parse_url(route('plugin.compras.index'), PHP_URL_PATH) ?: '/plugin/compras';
+        $ordensPath = parse_url(route('plugin.compras.ordens.index'), PHP_URL_PATH) ?: '/plugin/compras/ordens';
     } catch (\Throwable) {
         $path = '/plugin/compras';
+        $ordensPath = '/plugin/compras/ordens';
     }
     $items[] = [
         'name' => 'Compras',
         'icon' => 'task',
         'subItems' => [
             ['name' => 'Importar NF-e', 'path' => $path, 'pro' => false],
+            ['name' => 'Ordens de Compra', 'path' => $ordensPath, 'pro' => false],
         ],
     ];
 
