@@ -101,7 +101,20 @@ if (file_exists($lockFile) && $step !== '5') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $postStep = $_POST['step'] ?? '';
+    // SECURITY: once the system is installed, refuse every installer POST.
+    // The "already installed" lock above only forces the GET screen to step 5; it did
+    // NOT gate POST processing, so an unauthenticated request could still rewrite the
+    // live .env (step 3) and re-run key:generate/migrate/db:seed (step 4), allowing a
+    // full takeover of an already-installed instance. Abort before any processing.
+    if (file_exists($lockFile)) {
+        http_response_code(403);
+        $errors[] = 'O sistema ja esta instalado. O instalador esta bloqueado. '
+            . 'Para reinstalar, remova o arquivo installed.lock no servidor.';
+        $step = '5';
+        $postStep = '';
+    } else {
+        $postStep = $_POST['step'] ?? '';
+    }
 
     if ($postStep === '2') {
         $installMode = (string)($_POST['install_mode'] ?? 'subdominio');
